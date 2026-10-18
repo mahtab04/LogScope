@@ -1,0 +1,4 @@
+{"timestamp":"2026-10-18T10:00:00Z","level":"INFO","source":"server","message":"Server started"}
+{"timestamp":"2026-10-18T10:00:01Z","level":"DEBUG","source":"network","message":"Client connected"}
+{"timestamp":"2026-10-18T10:00:02Z","level":"WARN","source":"network","message":"High latency detected"}
+{"timestamp":"2026-10-18T10:00:03Z","level":"ERROR","source":"db","message":"Query timed out"}
