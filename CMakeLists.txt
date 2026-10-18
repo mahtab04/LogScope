@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_AUTOMOC ON)
 
 # Use Fedora's system Qt 6; Conan supplies only third-party C++ packages.
-find_package(Qt6 REQUIRED COMPONENTS Widgets Test)
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(fmt REQUIRED CONFIG)
 find_package(spdlog REQUIRED CONFIG)
 find_package(nlohmann_json REQUIRED CONFIG)
@@ -37,7 +37,25 @@ target_link_libraries(logscope_samplegen PRIVATE
 
 include(CTest)
 if(BUILD_TESTING)
+    find_package(GTest REQUIRED CONFIG)
+    include(GoogleTest)
     add_executable(logscope_tests tests/test_LogParser.cpp)
-    target_link_libraries(logscope_tests PRIVATE logscope_core Qt6::Test)
-    add_test(NAME parser_smoke COMMAND logscope_tests)
+    target_link_libraries(logscope_tests PRIVATE logscope_core GTest::gtest_main)
+    set_target_properties(logscope_tests PROPERTIES AUTOMOC OFF)
+    gtest_discover_tests(logscope_tests)
+
+    add_executable(logscope_record_tests tests/test_LogRecord.cpp)
+    target_include_directories(logscope_record_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+    target_link_libraries(logscope_record_tests PRIVATE Qt6::Core GTest::gtest_main)
+    set_target_properties(logscope_record_tests PROPERTIES AUTOMOC OFF)
+    gtest_discover_tests(logscope_record_tests)
+
+    # Run tests on each default build, including builds with no source changes.
+    add_custom_target(check ALL
+        COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG>
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        DEPENDS logscope_tests logscope_record_tests
+        USES_TERMINAL
+        VERBATIM
+    )
 endif()

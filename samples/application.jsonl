@@ -2,3 +2,39 @@
 {"timestamp":"2026-10-18T10:00:01Z","level":"DEBUG","source":"network","message":"Client connected"}
 {"timestamp":"2026-10-18T10:00:02Z","level":"WARN","source":"network","message":"High latency detected"}
 {"timestamp":"2026-10-18T10:00:03Z","level":"ERROR","source":"db","message":"Query timed out"}
+{"timestamp":"2026-10-18T10:00:04Z","level":"INFO","source":"db","message":"Database connection restored"}
+{"timestamp":"2026-10-18T10:00:05Z","level":"DEBUG","source":"db","message":"Connection pool initialized with 8 connections"}
+{"timestamp":"2026-10-18T10:00:06Z","level":"INFO","source":"auth","message":"User alice signed in"}
+{"timestamp":"2026-10-18T10:00:07Z","level":"WARN","source":"auth","message":"Failed login attempt for user bob"}
+{"timestamp":"2026-10-18T10:00:08Z","level":"DEBUG","source":"http","message":"GET /api/health returned 200 in 3 ms"}
+{"timestamp":"2026-10-18T10:00:09Z","level":"INFO","source":"http","message":"GET /api/logs returned 200 in 42 ms"}
+{"timestamp":"2026-10-18T10:00:10Z","level":"DEBUG","source":"cache","message":"Cache miss for key user:1042"}
+{"timestamp":"2026-10-18T10:00:11Z","level":"DEBUG","source":"cache","message":"Stored user:1042 with TTL 300 seconds"}
+{"timestamp":"2026-10-18T10:00:12Z","level":"INFO","source":"worker","message":"Started background job job-001"}
+{"timestamp":"2026-10-18T10:00:13Z","level":"WARN","source":"worker","message":"Job queue depth reached 150 items"}
+{"timestamp":"2026-10-18T10:00:14Z","level":"ERROR","source":"http","message":"POST /api/upload returned 413: payload too large"}
+{"timestamp":"2026-10-18T10:00:15Z","level":"INFO","source":"storage","message":"Saved report to /var/lib/logscope/reports/daily.json"}
+{"timestamp":"2026-10-18T10:00:16Z","level":"DEBUG","source":"parser","message":"Parsed record containing escaped quotes: \"request accepted\""}
+{"timestamp":"2026-10-18T10:00:17Z","level":"WARN","source":"storage","message":"Available disk space dropped below 10 percent"}
+{"timestamp":"2026-10-18T10:00:18Z","level":"ERROR","source":"storage","message":"Unable to write report: permission denied"}
+{"timestamp":"2026-10-18T10:00:19Z","level":"INFO","source":"worker","message":"Completed background job job-001 in 1250 ms"}
+{"timestamp":"2026-10-18T10:00:20Z","level":"DEBUG","source":"network","message":"Retrying connection to upstream service, attempt 1 of 3"}
+{"timestamp":"2026-10-18T10:00:21Z","level":"WARN","source":"network","message":"Upstream service did not respond within 5000 ms"}
+{"timestamp":"2026-10-18T10:00:22Z","level":"ERROR","source":"network","message":"Connection failed after 3 attempts"}
+{"timestamp":"2026-10-18T10:00:23Z","level":"INFO","source":"network","message":"Switched to backup endpoint"}
+{"timestamp":"2026-10-18T10:00:24Z","level":"INFO","source":"auth","message":"User alice signed out"}
+{"timestamp":"2026-10-18T10:00:25Z","level":"DEBUG","source":"scheduler","message":"Next cleanup scheduled for 2026-10-18T11:00:00Z"}
+{"timestamp":"2026-10-18T10:00:26Z","level":"INFO","source":"cleanup","message":"Removed 24 expired temporary files"}
+{"timestamp":"2026-10-18T10:00:27Z","level":"WARN","source":"config","message":"Optional setting LOG_RETENTION_DAYS missing; using 7"}
+{"timestamp":"2026-10-18T10:00:28Z","level":"INFO","source":"config","message":"Configuration reloaded successfully"}
+{"timestamp":"2026-10-18T10:00:29Z","level":"DEBUG","source":"http","message":"Search query: severity=ERROR&source=network"}
+{"timestamp":"2026-10-18T10:00:30Z","level":"INFO","source":"notifications","message":"Notification delivered: 服务已恢复 — service restored"}
+{"timestamp":"2026-10-18T10:00:31Z","level":"DEBUG","source":"parser","message":"Multiline message preview:\nfirst line\nsecond line"}
+{"timestamp":"2026-10-18T10:00:32Z","level":"ERROR","source":"worker","message":"Job job-002 failed: invalid input format"}
+{"timestamp":"2026-10-18T10:00:33Z","level":"INFO","source":"worker","message":"Moved job job-002 to the retry queue"}
+{"timestamp":"2026-10-18T10:00:34Z","level":"WARN","source":"metrics","message":"Memory usage reached 85 percent"}
+{"timestamp":"2026-10-18T10:00:35Z","level":"DEBUG","source":"metrics","message":"Active connections=12, queued jobs=4, cache hit rate=92%"}
+{"timestamp":"2026-10-18T10:00:36Z","level":"INFO","source":"server","message":"Received shutdown request"}
+{"timestamp":"2026-10-18T10:00:37Z","level":"INFO","source":"worker","message":"Waiting for 2 active jobs to finish"}
+{"timestamp":"2026-10-18T10:00:38Z","level":"INFO","source":"db","message":"Database connections closed"}
+{"timestamp":"2026-10-18T10:00:39Z","level":"INFO","source":"server","message":"Shutdown completed successfully"}

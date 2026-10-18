@@ -8,7 +8,7 @@ A lightweight Qt 6 desktop viewer for JSON Lines application logs, developed in 
 - Fedora Linux, GCC, CMake, Ninja
 - Qt 6 Widgets (installed from Fedora packages)
 - Conan 2: fmt, spdlog, nlohmann_json
-- Qt Test for unit tests
+- GoogleTest for unit tests (provided by Conan)
 
 ## Build
 

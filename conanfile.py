@@ -14,5 +14,8 @@ class LogScopeDependencies(ConanFile):
         self.requires("spdlog/1.17.0")
         self.requires("nlohmann_json/3.12.0")
 
+    def build_requirements(self):
+        self.test_requires("gtest/1.18.0")
+
     def layout(self):
         cmake_layout(self)
