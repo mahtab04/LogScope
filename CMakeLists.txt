@@ -50,11 +50,16 @@ if(BUILD_TESTING)
     set_target_properties(logscope_record_tests PROPERTIES AUTOMOC OFF)
     gtest_discover_tests(logscope_record_tests)
 
+    add_executable(logscope_reader_tests tests/test_LogFileReader.cpp)
+    target_link_libraries(logscope_reader_tests PRIVATE logscope_core GTest::gtest_main)
+    set_target_properties(logscope_reader_tests PROPERTIES AUTOMOC OFF)
+    gtest_discover_tests(logscope_reader_tests)
+
     # Run tests on each default build, including builds with no source changes.
     add_custom_target(check ALL
         COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG>
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-        DEPENDS logscope_tests logscope_record_tests
+        DEPENDS logscope_tests logscope_record_tests logscope_reader_tests
         USES_TERMINAL
         VERBATIM
     )
