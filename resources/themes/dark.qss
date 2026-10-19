@@ -59,3 +59,8 @@ QComboBox { background-color: #252b3a; color: #e4e9f5; border: 1px solid #394156
 QComboBox:hover, QComboBox:focus { border-color: #b49afa; }
 QComboBox::drop-down { border: none; width: 24px; }
 QComboBox QAbstractItemView { background-color: #252b3a; color: #e4e9f5; selection-background-color: #654e95; selection-color: #ffffff; outline: 0; }
+
+/* Read-only log table. Full cell contents are available as tooltips. */
+QTableView { background-color: #151a25; alternate-background-color: #1c2230; color: #c9d5e9; border: 1px solid #303b51; border-radius: 8px; selection-background-color: #4c3a70; selection-color: #c9d5e9; }
+QTableView::item { padding: 6px; border: none; }
+QHeaderView::section { background-color: #242c3c; color: #c9d5e9; border: none; border-bottom: 1px solid #303b51; padding: 11px 6px; font-weight: 600; }

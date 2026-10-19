@@ -2,7 +2,8 @@
 #include <QMainWindow>
 
 class QLabel;
-class QPlainTextEdit;
+class QTableView;
+class LogModel;
 
 class MainWindow : public QMainWindow {
 public:
@@ -11,7 +12,8 @@ public:
 private:
     void chooseFile();
     bool applyTheme(const QString& name);
-    QPlainTextEdit* preview_;
+    LogModel* model_ = nullptr;
+    QTableView* table_;
     QLabel* fileLabel_;
     QLabel* totalLabel_;
     QLabel* errorLabel_;

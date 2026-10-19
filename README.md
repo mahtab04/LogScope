@@ -28,7 +28,7 @@ Click **Open file** (Ctrl+O) to load `samples/application.jsonl`, or pass a file
 ./build/Debug/logscope samples/application.jsonl
 ```
 
-The current UI previews raw JSONL and shows event, error, and warning counts. Click **Reload** to read file changes. Invalid lines are counted; incomplete final lines wait for a newline. Model/View tables, search, and severity filtering will be implemented in later steps.
+The current UI displays parsed events in a read-only table with timestamp (UTC), level, source, and message columns, alongside event, error, and warning counts. Hover over a cell to see its full contents. Rows stay in file order. Click **Reload** to replace the displayed records with the current file contents. Invalid lines are skipped and counted; incomplete final lines wait for a newline. Search and severity filtering will be implemented in a later step.
 
 Use the **Dark / Light** selector in the toolbar to switch appearance instantly. Your selection is remembered between launches. Themes live in `resources/themes/dark.qss` and `resources/themes/light.qss`. Edit either file and rebuild to customize it. CMake embeds both into the executable, so they work from any launch directory.
 
@@ -46,8 +46,8 @@ If Conan-generated files are missing, re-run `conan install ...` before CMake Co
 
 ## Roadmap
 - [x] Project bootstrap, Conan dependencies and build
-- [x] Basic JSONL parsing and raw file preview
-- [ ] Model/View table display
+- [x] Basic JSONL parsing
+- [x] Model/View table display
 - [ ] Search and severity filtering
 - [ ] Follow appended file data without re-reading entire file
 - [ ] Robust malformed-line reporting and tests

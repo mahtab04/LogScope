@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "LogFileReader.h"
 #include "LogParser.h"
+#include "LogModel.h"
 
 #include <QComboBox>
 #include <QFile>
@@ -14,7 +15,8 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QPushButton>
-#include <QPlainTextEdit>
+#include <QTableView>
+#include <QHeaderView>
 #include <QVBoxLayout>
 
 namespace {
@@ -58,7 +60,7 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     auto* explorer = new QPushButton("▤   Log explorer");
     explorer->setObjectName("navActive");
     navigation->addWidget(explorer);
-    connect(explorer, &QPushButton::clicked, this, [this] { preview_->setFocus(); });
+    connect(explorer, &QPushButton::clicked, this, [this] { table_->setFocus(); });
     auto* openSide = new QPushButton("＋   Open log file");
     openSide->setObjectName("navButton");
     connect(openSide, &QPushButton::clicked, this, &MainWindow::chooseFile);
@@ -126,17 +128,32 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     fileRow->addWidget(fileLabel_, 1);
     fileRow->addWidget(label("JSONL  ·  READ ONLY", "eyebrow"));
     panelLayout->addLayout(fileRow);
-    preview_ = new QPlainTextEdit;
-    preview_->setReadOnly(true);
-    preview_->setLineWrapMode(QPlainTextEdit::NoWrap);
-    preview_->setPlaceholderText("Open a JSONL file to preview its contents.");
-    preview_->setAccessibleName("Raw log file preview");
-    panelLayout->addWidget(preview_, 1);
+    model_ = new LogModel(this);
+    model_->setDarkTheme(themeSelector->currentData().toString() == "dark");
+    table_ = new QTableView;
+    table_->setModel(model_);
+    table_->setAccessibleName("Log events");
+    table_->setSelectionBehavior(QAbstractItemView::SelectRows);
+    table_->setSelectionMode(QAbstractItemView::SingleSelection);
+    table_->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    table_->setAlternatingRowColors(true);
+    table_->setShowGrid(false);
+    table_->setWordWrap(false);
+    table_->setTextElideMode(Qt::ElideRight);
+    table_->verticalHeader()->hide();
+    table_->verticalHeader()->setDefaultSectionSize(42);
+    table_->horizontalHeader()->setDefaultAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+    table_->horizontalHeader()->setHighlightSections(false);
+    table_->horizontalHeader()->setStretchLastSection(true);
+    table_->setColumnWidth(LogModel::Timestamp, 250);
+    table_->setColumnWidth(LogModel::Level, 90);
+    table_->setColumnWidth(LogModel::Source, 130);
+    panelLayout->addWidget(table_, 1);
     notice_ = label("Open a JSONL file to begin.  •  Ctrl+O", "muted");
     notice_->setWordWrap(true);
     panelLayout->addWidget(notice_);
     page->addWidget(panel, 1);
-    page->addWidget(label("Your logs stay on this machine.   •   Raw JSONL preview", "muted"));
+    page->addWidget(label("Your logs stay on this machine.   •   Timestamps shown in UTC", "muted"));
     shell->addWidget(content, 1);
 
     auto* openAction = new QAction(this);
@@ -163,7 +180,7 @@ bool MainWindow::openFile(const QString& path) {
         QMessageBox::warning(this, "Unable to read file", reader.errorString());
         return false;
     }
-    int total = 0;
+    QVector<LogRecord> records;
     int invalid = 0, errors = 0, warnings = 0;
     const LogParser parser;
     for (const auto& line : lines) {
@@ -171,16 +188,16 @@ bool MainWindow::openFile(const QString& path) {
             const auto level = record->level.toUpper();
             errors += level == "ERROR" || level == "FATAL";
             warnings += level == "WARN" || level == "WARNING";
-            ++total;
+            records.push_back(std::move(*record));
         } else {
             ++invalid;
         }
     }
     path_ = path;
-    preview_->setPlainText(lines.join(QLatin1Char('\n')));
+    model_->setRecords(std::move(records));
     fileLabel_->setText(QFileInfo(path).fileName());
     fileLabel_->setToolTip(QFileInfo(path).absoluteFilePath());
-    totalLabel_->setText(QString::number(total));
+    totalLabel_->setText(QString::number(model_->rowCount()));
     errorLabel_->setText(QString::number(errors));
     warningLabel_->setText(QString::number(warnings));
     notice_->setText(QString("%1 invalid lines skipped.  •  Only newline-terminated records are loaded.  •  Reload to read changes.").arg(invalid));
@@ -198,6 +215,7 @@ bool MainWindow::applyTheme(const QString& name) {
     // Scope the theme to the workspace. File/message dialogs are parented to
     // MainWindow and should retain a consistent system palette.
     centralWidget()->setStyleSheet(QString::fromUtf8(stylesheet.readAll()));
+    if (model_) model_->setDarkTheme(name == "dark");
     QSettings().setValue("appearance/theme", name);
     return true;
 }
