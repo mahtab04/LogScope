@@ -15,8 +15,6 @@ find_package(nlohmann_json REQUIRED CONFIG)
 add_library(logscope_core
     src/LogFileReader.cpp
     src/LogParser.cpp
-    src/LogModel.cpp
-    src/LogFilterProxyModel.cpp
 )
 target_include_directories(logscope_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(logscope_core PUBLIC
@@ -28,6 +26,10 @@ target_link_libraries(logscope_core PUBLIC
 
 add_executable(logscope src/main.cpp src/MainWindow.cpp)
 target_link_libraries(logscope PRIVATE logscope_core)
+qt_add_resources(logscope "themes"
+    PREFIX "/"
+    FILES resources/themes/dark.qss resources/themes/light.qss
+)
 
 # A tiny CLI program to prove the Conan libraries link correctly.
 add_executable(logscope_samplegen tools/sample_generator.cpp)
