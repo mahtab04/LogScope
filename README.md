@@ -28,7 +28,7 @@ Click **Open file** (Ctrl+O) to load `samples/application.jsonl`, or pass a file
 ./build/Debug/logscope samples/application.jsonl
 ```
 
-The current UI displays parsed events in a read-only table with timestamp (UTC), level, source, and message columns, alongside event, error, and warning counts. Hover over a cell to see its full contents. Rows stay in file order. Click **Reload** to replace the displayed records with the current file contents. Invalid lines are skipped and counted; incomplete final lines wait for a newline. Search and severity filtering will be implemented in a later step.
+The current UI displays parsed events in a read-only table with timestamp (UTC), level, source, and message columns, alongside event, error, and warning counts. Hover over a cell to see its full contents. Rows stay in file order. Click **Reload** to replace the displayed records with the current file contents. Invalid lines are skipped and counted; incomplete final lines wait for a newline. Search matches literal text in Source and Message, ignoring case (Ctrl+F). The severity dropdown offers All levels, DEBUG, INFO, WARN, and ERROR, matching levels exactly without regard to case. Both filters combine, persist across reloads, and preserve file order. The filtered count shows visible events; summary cards always describe the whole loaded file.
 
 Use the **Dark / Light** selector in the toolbar to switch appearance instantly. Your selection is remembered between launches. Themes live in `resources/themes/dark.qss` and `resources/themes/light.qss`. Edit either file and rebuild to customize it. CMake embeds both into the executable, so they work from any launch directory.
 
@@ -48,7 +48,7 @@ If Conan-generated files are missing, re-run `conan install ...` before CMake Co
 - [x] Project bootstrap, Conan dependencies and build
 - [x] Basic JSONL parsing
 - [x] Model/View table display
-- [ ] Search and severity filtering
+- [x] Search and severity filtering
 - [ ] Follow appended file data without re-reading entire file
 - [ ] Robust malformed-line reporting and tests
 - [ ] Export filtered records

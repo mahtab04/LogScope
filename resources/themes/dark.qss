@@ -64,3 +64,6 @@ QComboBox QAbstractItemView { background-color: #252b3a; color: #e4e9f5; selecti
 QTableView { background-color: #151a25; alternate-background-color: #1c2230; color: #c9d5e9; border: 1px solid #303b51; border-radius: 8px; selection-background-color: #4c3a70; selection-color: #c9d5e9; }
 QTableView::item { padding: 6px; border: none; }
 QHeaderView::section { background-color: #242c3c; color: #c9d5e9; border: none; border-bottom: 1px solid #303b51; padding: 11px 6px; font-weight: 600; }
+
+QLineEdit#logSearch { background-color: #151a25; color: #c9d5e9; border: 1px solid #303b51; border-radius: 9px; padding: 11px 12px; selection-background-color: #654e95; selection-color: #ffffff; }
+QLineEdit#logSearch:focus { border-color: #9c83e8; }

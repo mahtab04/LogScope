@@ -16,6 +16,7 @@ add_library(logscope_core
     src/LogFileReader.cpp
     src/LogParser.cpp
     src/LogModel.cpp
+    src/LogFilterProxyModel.cpp
 )
 target_include_directories(logscope_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(logscope_core PUBLIC
@@ -42,7 +43,7 @@ include(CTest)
 if(BUILD_TESTING)
     find_package(GTest REQUIRED CONFIG)
     include(GoogleTest)
-    add_executable(logscope_tests tests/test_LogParser.cpp tests/test_LogModel.cpp)
+    add_executable(logscope_tests tests/test_LogParser.cpp tests/test_LogModel.cpp tests/test_LogFilterProxyModel.cpp)
     target_link_libraries(logscope_tests PRIVATE logscope_core GTest::gtest_main)
     set_target_properties(logscope_tests PROPERTIES AUTOMOC OFF)
     gtest_discover_tests(logscope_tests)

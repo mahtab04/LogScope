@@ -2,6 +2,7 @@
 #include "LogFileReader.h"
 #include "LogParser.h"
 #include "LogModel.h"
+#include "LogFilterProxyModel.h"
 
 #include <QComboBox>
 #include <QFile>
@@ -13,6 +14,7 @@
 #include <QFileInfo>
 #include <QFrame>
 #include <QLabel>
+#include <QLineEdit>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QTableView>
@@ -130,8 +132,44 @@ MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent) {
     panelLayout->addLayout(fileRow);
     model_ = new LogModel(this);
     model_->setDarkTheme(themeSelector->currentData().toString() == "dark");
+    filter_ = new LogFilterProxyModel(this);
+    filter_->setSourceModel(model_);
+
+    auto* filterRow = new QHBoxLayout;
+    auto* search = new QLineEdit;
+    search->setObjectName("logSearch");
+    search->setAccessibleName("Search source and message");
+    search->setPlaceholderText("Search source or message…  (Ctrl+F)");
+    search->setClearButtonEnabled(true);
+    auto* severity = new QComboBox;
+    severity->setObjectName("severityFilter");
+    severity->setAccessibleName("Severity filter");
+    severity->addItem("All levels", QString());
+    for (const auto* level : {"DEBUG", "INFO", "WARN", "ERROR"})
+        severity->addItem(QString::fromLatin1(level), QString::fromLatin1(level));
+    visibleCount_ = label("0 of 0 events", "muted");
+    filterRow->addWidget(search, 1);
+    filterRow->addWidget(severity);
+    filterRow->addWidget(visibleCount_);
+    panelLayout->addLayout(filterRow);
+    connect(search, &QLineEdit::textChanged, this, [this](const QString& text) {
+        filter_->setSearchText(text);
+        updateVisibleCount();
+    });
+    connect(severity, &QComboBox::currentIndexChanged, this, [this, severity] {
+        filter_->setSeverity(severity->currentData().toString());
+        updateVisibleCount();
+    });
+    auto* findAction = new QAction(this);
+    findAction->setShortcut(QKeySequence::Find);
+    addAction(findAction);
+    connect(findAction, &QAction::triggered, this, [search] {
+        search->setFocus();
+        search->selectAll();
+    });
+
     table_ = new QTableView;
-    table_->setModel(model_);
+    table_->setModel(filter_);
     table_->setAccessibleName("Log events");
     table_->setSelectionBehavior(QAbstractItemView::SelectRows);
     table_->setSelectionMode(QAbstractItemView::SingleSelection);
@@ -195,6 +233,7 @@ bool MainWindow::openFile(const QString& path) {
     }
     path_ = path;
     model_->setRecords(std::move(records));
+    updateVisibleCount();
     fileLabel_->setText(QFileInfo(path).fileName());
     fileLabel_->setToolTip(QFileInfo(path).absoluteFilePath());
     totalLabel_->setText(QString::number(model_->rowCount()));
@@ -218,4 +257,12 @@ bool MainWindow::applyTheme(const QString& name) {
     if (model_) model_->setDarkTheme(name == "dark");
     QSettings().setValue("appearance/theme", name);
     return true;
+}
+
+void MainWindow::updateVisibleCount() {
+    const auto visible = filter_->rowCount();
+    visibleCount_->setText(QString("%1 of %2 events").arg(visible).arg(model_->rowCount()));
+    visibleCount_->setToolTip(visible == 0 && model_->rowCount() > 0
+        ? QStringLiteral("No matching events. Clear the search or select All levels.")
+        : QStringLiteral("Summary cards count all loaded events."));
 }

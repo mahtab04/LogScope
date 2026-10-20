@@ -4,6 +4,7 @@
 class QLabel;
 class QTableView;
 class LogModel;
+class LogFilterProxyModel;
 
 class MainWindow : public QMainWindow {
 public:
@@ -11,9 +12,12 @@ public:
     bool openFile(const QString& path);
 private:
     void chooseFile();
+    void updateVisibleCount();
     bool applyTheme(const QString& name);
     LogModel* model_ = nullptr;
+    LogFilterProxyModel* filter_;
     QTableView* table_;
+    QLabel* visibleCount_;
     QLabel* fileLabel_;
     QLabel* totalLabel_;
     QLabel* errorLabel_;
